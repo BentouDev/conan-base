@@ -62,6 +62,8 @@ def build(channel, commit, password, version):
         else:
             compiler = "gcc"
             print (' [*] Selected gcc')
+    else:
+        os.environ['CXXFLAGS'] = '/Zc:char8_t'
 
     builder.add_common_builds()
 
