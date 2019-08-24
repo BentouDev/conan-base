@@ -63,7 +63,8 @@ def build(channel, commit, password, version):
             compiler = "gcc"
             print (' [*] Selected gcc')
     else:
-        os.environ['CXXFLAGS'] = '/Zc:char8_t'
+        # disable char8_t support, breaks build for EASTL
+        os.environ['CXXFLAGS'] = '/Zc:char8_t-'
 
     builder.add_common_builds()
 
