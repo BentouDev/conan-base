@@ -221,6 +221,9 @@ def execute(password):
 
 def StartBuild():
     print ('')
+    cwd = os.getcwd()
+    print (' [info] Current dir: ' + cwd)
+    print (' [info] Package : \'' + PACKAGE_NAME + '\', git dir: \'' + GIT_DIR + '\', prefix: \'' + ENV_PREFIX + '\'')
     if len(sys.argv) >= 2:
         execute(sys.argv[1])
     else:
