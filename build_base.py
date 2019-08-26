@@ -29,7 +29,7 @@ def createBuilder(channel, commit, password, upload_url):
     else:
         build_types = os.environ["CONAN_BUILD_TYPES"].split()
 
-    if password:
+    if password and upload_url:
          return ConanMultiPackager(username=username,
                  channel=channel,
                  stable_branch_pattern=branch_pattern,
@@ -231,5 +231,5 @@ def StartBuild():
         if 'REPOSITORY_KEY' in os.environ and 'REPOSITORY_URL' in os.environ:
             execute(os.environ['REPOSITORY_KEY'], os.environ['REPOSITORY_URL'])
         else:
-            print(" [warn] Missing repository key argument! Package won't be uploaded")
+            print(" [warn] Missing repository key or url argument! Package won't be uploaded")
             execute(None, None)
