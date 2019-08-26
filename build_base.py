@@ -11,7 +11,7 @@ STABLE_IN_GIT = True
 
 username = "bentoudev"
 
-def createBuilder(channel, commit, password, version):
+def createBuilder(channel, commit, password, upload_url):
     branch_pattern = 'release*' # channel is set explicitly!
 
     if not "CONAN_VISUAL_VERSIONS" in os.environ:
@@ -37,7 +37,7 @@ def createBuilder(channel, commit, password, version):
                  build_types=build_types,
                  upload_retry=10,
 
-                 upload="https://api.bintray.com/conan/bentoudev/yage",
+                 upload=upload_url,
                  password=password)
     else:
 
@@ -147,16 +147,16 @@ def getGitVersion():
         print (' [*] Caught error: ' + str(error))
         return None
 
-def upload(password):
-    if not password:
-        print (' [*] No repository key, skipping upload...')
+def upload(password, upload_url):
+    if not password or not upload_url:
+        print (' [*] No repository key or url, skipping upload...')
         return
 
-    runCommand(['conan', 'remote', 'add', 'yage', 'https://api.bintray.com/conan/bentoudev/yage'], True)
+    runCommand(['conan', 'remote', 'add', 'yage', upload_url], True)
     runCommand(['conan', 'user', '-p', password, '-r', 'yage', username], True)
     runCommand(['conan', 'upload', PACKAGE_NAME + '*', '--all', '-r', 'yage', '-c', '--retry', '3', '--retry-wait', '10'], True)
 
-def execute(password):
+def execute(password, upload_url):
     channel = 'dev'
     version = None
     commit = None
@@ -213,8 +213,8 @@ def execute(password):
         print ('')
         print (' [*] Executing conan build...')
 
-        build(channel, commit, password, version)
-        upload(password)
+        build(channel, commit, password, upload_url)
+        upload(password, upload_url)
     else:
         msg = "Unable to determine version"
         sys.stderr.write(str.format(' [error] {}!', msg))
@@ -228,8 +228,8 @@ def StartBuild():
     if len(sys.argv) >= 2:
         execute(sys.argv[1])
     else:
-        if 'REPOSITORY_KEY' in os.environ:
-            execute(os.environ['REPOSITORY_KEY'])
+        if 'REPOSITORY_KEY' in os.environ and 'REPOSITORY_URL' in os.environ:
+            execute(os.environ['REPOSITORY_KEY'], os.environ['REPOSITORY_URL'])
         else:
             print(" [warn] Missing repository key argument! Package won't be uploaded")
-            execute(None)
+            execute(None, None)
