@@ -225,8 +225,8 @@ def StartBuild():
     cwd = os.getcwd()
     print (' [info] Current dir: ' + cwd)
     print (' [info] Package : \'' + PACKAGE_NAME + '\', git dir: \'' + GIT_DIR + '\', prefix: \'' + ENV_PREFIX + '\'')
-    if len(sys.argv) >= 2:
-        execute(sys.argv[1])
+    if len(sys.argv) >= 3:
+        execute(sys.argv[1], sys.argv[2])
     else:
         if 'REPOSITORY_KEY' in os.environ and 'REPOSITORY_URL' in os.environ:
             execute(os.environ['REPOSITORY_KEY'], os.environ['REPOSITORY_URL'])
