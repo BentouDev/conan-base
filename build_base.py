@@ -47,11 +47,11 @@ def createBuilder(channel, commit, password, upload_url):
             visual_versions=visual_versions,
             build_types=build_types)
 
-def build(channel, commit, password, version):
+def build(channel, commit, password, upload_url, version):
     os.environ[ENV_PREFIX + '_COMMIT'] = commit
     os.environ[ENV_PREFIX + '_VERSION'] = version
 
-    builder = createBuilder(channel, commit, password, version)
+    builder = createBuilder(channel, commit, password, upload_url)
 
     compiler = None
 
@@ -213,7 +213,7 @@ def execute(password, upload_url):
         print ('')
         print (' [*] Executing conan build...')
 
-        build(channel, commit, password, upload_url)
+        build(channel, commit, password, upload_url, version)
         upload(password, upload_url)
     else:
         msg = "Unable to determine version"
